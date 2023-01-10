@@ -84,7 +84,7 @@ public class BaseCommandsListener extends ListenerAdapter {
 				LOGGER.info("Bot instance shut down successfully.");
 			} else {
 				LOGGER.info("ALERT: Unauthorized shutdown request by " +event.getAuthor().getAsTag());
-				channel.sendMessage("You not owner.").queue();
+				channel.sendMessage("You not owner. This incident will be reported.").queue();
 			}
         }
 	}
