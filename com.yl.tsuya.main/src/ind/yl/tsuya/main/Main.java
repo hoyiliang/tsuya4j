@@ -31,7 +31,7 @@ public class Main {
 			// Missing BOT_TOKEN!
 			e.printStackTrace();
 		}
-		JDA bot = JDABuilder.createDefault(BOT_TOKEN)
+		final JDA bot = JDABuilder.createDefault(BOT_TOKEN)
 					.enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
 					.setActivity(Activity.playing("New to JDA!"))
 					.build();
@@ -41,12 +41,12 @@ public class Main {
 	}
 
 	// Init methods
-	public static void initEventListeners(JDA bot) {
+	public static void initEventListeners(final JDA bot) {
 		bot.addEventListener(new BaseCommandsListener(bot));
 		bot.addEventListener(new MusicCommandsListener());
 	}
 
-	public static void initCommands(JDA bot) {
+	public static void initCommands(final JDA bot) {
 		LOGGER.info("ENTERING: initCommands()");
 		bot.updateCommands().addCommands(
 			//// Base Section /////////////////////////////////////////////////////
@@ -57,8 +57,20 @@ public class Main {
 			//// Music Section ///////////////////////////////////////////////////
 			Commands.slash("play", "Plays a music with a URL provided.")
 				.setGuildOnly(true)
-				.addOption(OptionType.STRING, "url", "Write YouTube URL here.", true)
+				.addOption(OptionType.STRING, "url", "Write YouTube URL here.", true),
+			Commands.slash("volume", "Change volume of the music player.")
+				.setGuildOnly(true)
+				.addOption(OptionType.INTEGER, "value", "Range: 0-100", true),
+			Commands.slash("pause", "Pause the music.")
+				.setGuildOnly(true),
+			Commands.slash("resume", "Resumes the music.")
+				.setGuildOnly(true),
+			Commands.slash("stop", "Stops the player and leaves the voice channel.")
+				.setGuildOnly(true),
+			Commands.slash("skip", "Skips the current track.")
+				.setGuildOnly(true)
 			).queue();
+
 		LOGGER.info("EXITING: initCommands()");
 	}
 

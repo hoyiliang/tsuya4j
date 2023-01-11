@@ -61,6 +61,7 @@ public class BaseCommandsListener extends ListenerAdapter {
 			embedAbout.addField("Developers", ">>> Stevehyl\nYukinaForever", false);
 			embedAbout.addField("Testers", ">>> Belrys\nAUNTIE SLAYER\nHao\nDeathEnd1st\nRinka Lynx", false);
 			event.replyEmbeds(embedAbout.build()).queue();
+			break;
 		}
 	}
 
