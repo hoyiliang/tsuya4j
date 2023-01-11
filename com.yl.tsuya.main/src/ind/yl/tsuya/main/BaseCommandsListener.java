@@ -34,13 +34,14 @@ public class BaseCommandsListener extends ListenerAdapter {
 
 		case "help":
 			LOGGER.info("EXEC COMMAND: " +event.getName() +"\tFROM: " +event.getGuild());
-			EmbedBuilder ebHelp = new EmbedBuilder();
-			ebHelp.setTitle("List of available commands");
-			ebHelp.setColor(Color.blue);
-			ebHelp.setDescription("Shows all available commands for this bot.");
-			ebHelp.addField("`help`", "> Shows this message.", false);
-			ebHelp.addField("`ping`", "> Shows the bot's ping in ms.", false);
-			event.replyEmbeds(ebHelp.build()).queue();
+			EmbedBuilder embedHelp = new EmbedBuilder();
+			embedHelp.setTitle("List of available commands");
+			embedHelp.setColor(Color.blue);
+			embedHelp.setDescription("Shows all available commands for this bot.");
+			embedHelp.addField("`help`", "> Shows this message.", false);
+			embedHelp.addField("`ping`", "> Shows the bot's ping in ms.", false);
+			embedHelp.addField("`about`", "> Bot version, Developers, and Testers.", false);
+			event.replyEmbeds(embedHelp.build()).queue();
 			break;
 
 		case "ping":
@@ -54,12 +55,12 @@ public class BaseCommandsListener extends ListenerAdapter {
 
 		case "about":
 			LOGGER.info("EXEC COMMAND: " +event.getName() +"\tFROM: " +event.getGuild());
-			EmbedBuilder ebAbout = new EmbedBuilder();
-			ebAbout.setTitle("About Tsuya bot");
-			ebAbout.setDescription("Version: 0.0.1");
-			ebAbout.addField("Developer", "> Stevehyl", false);
-			ebAbout.addField("Testers", ">>> AUNTIE SLAYER\nHao\nDeathEnd1st\nRinka Lynx\nYukinaForever", false);
-			event.replyEmbeds(ebAbout.build()).queue();
+			EmbedBuilder embedAbout = new EmbedBuilder();
+			embedAbout.setTitle("About Tsuya bot");
+			embedAbout.setDescription("Version: 0.0.1");
+			embedAbout.addField("Developers", ">>> Stevehyl\nYukinaForever", false);
+			embedAbout.addField("Testers", ">>> Belrys\nAUNTIE SLAYER\nHao\nDeathEnd1st\nRinka Lynx", false);
+			event.replyEmbeds(embedAbout.build()).queue();
 		}
 	}
 

@@ -4,4 +4,3 @@
 # Ignore Files
 .env
 *.class
-*.properties

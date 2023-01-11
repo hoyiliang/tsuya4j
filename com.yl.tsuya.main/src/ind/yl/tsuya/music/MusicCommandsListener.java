@@ -55,13 +55,12 @@ public class MusicCommandsListener extends ListenerAdapter {
 	
 	private void loadAndPlay(final SlashCommandInteractionEvent event, final String url) {
 		GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
-		MessageChannelUnion textChannel = event.getChannel();
 		
 		playerManager.loadItemOrdered(musicManager, url, new AudioLoadResultHandler() {
 
 			@Override
 		    public void trackLoaded(AudioTrack track) {
-				textChannel.sendMessage("Adding to queue " + track.getInfo().title).queue();
+				event.reply("Adding to queue " + track.getInfo().title).queue();
 
 		      	play(event.getGuild(), musicManager, track);
 		    }
@@ -74,19 +73,19 @@ public class MusicCommandsListener extends ListenerAdapter {
 		    		firstTrack = playlist.getTracks().get(0);
 		    	}
 
-		    	textChannel.sendMessage("Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")").queue();
+		    	event.reply("Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")").queue();
 
 		    	play(event.getGuild(), musicManager, firstTrack);
 		    }
 
 		    @Override
 		    public void noMatches() {
-		    	textChannel.sendMessage("Nothing found by " + url).queue();
+		    	event.reply("Nothing found by " + url).queue();
 		    }
 
 		    @Override
 		    public void loadFailed(FriendlyException exception) {
-		    	textChannel.sendMessage("Could not play: " + exception.getMessage()).queue();
+		    	event.reply("Could not play: " + exception.getMessage()).queue();
 		    }
 		});
 	}
