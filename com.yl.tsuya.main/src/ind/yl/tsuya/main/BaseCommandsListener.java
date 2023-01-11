@@ -20,7 +20,7 @@ public class BaseCommandsListener extends ListenerAdapter {
 	private static final String ownerId = "238673285116723203";
 
 	private JDA bot;
-	
+
 	public BaseCommandsListener(JDA bot) {
 		this.bot = bot;
 	}
@@ -61,6 +61,7 @@ public class BaseCommandsListener extends ListenerAdapter {
 			embedAbout.addField("Developers", ">>> Stevehyl\nYukinaForever", false);
 			embedAbout.addField("Testers", ">>> Belrys\nAUNTIE SLAYER\nHao\nDeathEnd1st\nRinka Lynx", false);
 			event.replyEmbeds(embedAbout.build()).queue();
+			break;
 		}
 	}
 
