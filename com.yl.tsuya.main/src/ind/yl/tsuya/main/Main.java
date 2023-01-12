@@ -22,15 +22,7 @@ public class Main {
 	private static String BOT_TOKEN;
 
 	public static void main(String[] args) {
-		try {
-			File env = new File("C:\\Users\\yilia\\OneDrive\\Desktop\\Tsuya4J\\com.yl.tsuya.main\\src\\ind\\yl\\tsuya\\main\\.env");
-			Scanner readEnv = new Scanner(env);
-			BOT_TOKEN = readEnv.nextLine();
-			readEnv.close();
-		} catch (FileNotFoundException e) {
-			// Missing BOT_TOKEN!
-			e.printStackTrace();
-		}
+		BOT_TOKEN = args[0];
 		final JDA bot = JDABuilder.createDefault(BOT_TOKEN)
 					.enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
 					.setActivity(Activity.playing("New to JDA!"))
