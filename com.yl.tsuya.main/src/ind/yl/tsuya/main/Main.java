@@ -1,9 +1,5 @@
 package ind.yl.tsuya.main;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +43,9 @@ public class Main {
 			Commands.slash("about", "About Tsuya bot."),
 			
 			//// Music Section ///////////////////////////////////////////////////
-			Commands.slash("play", "Plays a music with a URL provided.")
+			Commands.slash("play", "Plays a music with an URL or keyword.")
 				.setGuildOnly(true)
-				.addOption(OptionType.STRING, "url", "Write YouTube URL here.", true),
+				.addOption(OptionType.STRING, "args", "Write an URL or keyword here.", true),
 			Commands.slash("volume", "Change volume of the music player.")
 				.setGuildOnly(true)
 				.addOption(OptionType.INTEGER, "value", "Range: 0-100", true),
@@ -60,17 +56,13 @@ public class Main {
 			Commands.slash("stop", "Stops the player and leaves the voice channel.")
 				.setGuildOnly(true),
 			Commands.slash("skip", "Skips the current track.")
+				.setGuildOnly(true),
+			Commands.slash("queue", "Get track queue.")
+				.setGuildOnly(true),
+			Commands.slash("nowplaying", "Get info for currently playing track.")
 				.setGuildOnly(true)
-			).queue();
+		).queue();
 
 		LOGGER.info("EXITING: initCommands()");
-	}
-
-	public static void initDoujinCommands() {
-		// TODO implement 
-	}
-
-	public static void initAdminCommands() {
-		// TODO implement
 	}
 }
