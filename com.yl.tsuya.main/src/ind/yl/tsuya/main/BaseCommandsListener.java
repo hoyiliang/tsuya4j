@@ -59,7 +59,7 @@ public class BaseCommandsListener extends ListenerAdapter {
 			embedAbout.setTitle("About Tsuya bot");
 			embedAbout.setDescription("Version: 0.0.1");
 			embedAbout.addField("Developers", ">>> Stevehyl\nYukinaForever", false);
-			embedAbout.addField("Testers", ">>> Belrys\nAUNTIE SLAYER\nHao\nDeathEnd1st\nRinka Lynx", false);
+			embedAbout.addField("Testers", ">>> Belrys\nAUNTIE SLAYER\nHao\nDeathEnd1st\nRinka Lynx\nN1ghtL1fe", false);
 			event.replyEmbeds(embedAbout.build()).queue();
 			break;
 		}
