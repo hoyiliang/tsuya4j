@@ -30,6 +30,12 @@
   	  <version>1.2.8</version>
   	</dependency>
   	<dependency>
+    <groupId>org.openjfx</groupId>
+    	<artifactId>javafx</artifactId>
+    	<version>19</version>
+    	<type>pom</type>
+	</dependency>
+  	<dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
       <version>19</version>
@@ -38,6 +44,26 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>19</version>
+    </dependency>
+    <dependency>
+		<groupId>org.openjfx</groupId>
+		<artifactId>javafx-media</artifactId>
+		<version>19</version>
+	</dependency>
+    <dependency>
+		<groupId>org.openjfx</groupId>
+		<artifactId>javafx-graphics</artifactId>
+		<version>19</version>
+	</dependency>
+	    <dependency>
+		<groupId>org.openjfx</groupId>
+		<artifactId>javafx-fxml</artifactId>
+		<version>19</version>
+	</dependency>
+    <dependency>
+      <groupId>org.controlsfx</groupId>
+      <artifactId>controlsfx</artifactId>
+      <version>11.1.2</version>
     </dependency>
   </dependencies>
 </project>

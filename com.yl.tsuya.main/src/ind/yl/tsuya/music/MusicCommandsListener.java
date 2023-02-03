@@ -22,8 +22,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 public class MusicCommandsListener extends ListenerAdapter {
@@ -52,6 +55,7 @@ public class MusicCommandsListener extends ListenerAdapter {
 		GuildMusicManager musicManager = musicManagers.get(Long.parseLong(event.getGuild().getId()));
 		AudioManager audioManager = event.getGuild().getAudioManager();
 		AudioChannelUnion voiceChannel = event.getMember().getVoiceState().getChannel();
+
 		switch(event.getName()) {
 
 			case "play":
@@ -82,20 +86,20 @@ public class MusicCommandsListener extends ListenerAdapter {
 			case "pause":
 				LOGGER.info("EXEC COMMAND: " +event.getName() +"\tFROM: " +event.getGuild() +"\tBY: " +userTagged);
 				if (musicManager.player.isPaused() == true) {
-					event.reply("Music is already Paused, do you mean */resume*?");
+					event.reply("Music is already Paused, do you mean */resume*?").queue();
 				} else {
 					musicManager.player.setPaused(true);
-					event.reply("Music is Paused.");
+					event.reply("Music is Paused.").queue();
 				}
 				break;
 			
 			case "resume":
 				LOGGER.info("EXEC COMMAND: " +event.getName() +"\tFROM: " +event.getGuild() +"\tBY: " +userTagged);
 				if (musicManager.player.isPaused() == false) {
-					event.reply("Music is currently Playing, do you mean */pause*?");
+					event.reply("Music is currently Playing, do you mean */pause*?").queue();;
 				} else {
 					musicManager.player.setPaused(false);
-					event.reply("Music is now Resumed.");
+					event.reply("Music is now Resumed.").queue();
 				}
 				break;
 				
@@ -136,7 +140,10 @@ public class MusicCommandsListener extends ListenerAdapter {
 
 			@Override
 		    public void trackLoaded(AudioTrack track) {
-				event.reply("Adding to queue: [ *" + track.getInfo().title +"* ]").queue();
+				EmbedBuilder loadedEmbed = new EmbedBuilder();
+				loadedEmbed.setTitle("Adding to Queue");
+				loadedEmbed.setDescription(track.getInfo().title);
+				event.replyEmbeds(loadedEmbed.build()).queue();
 
 		      	play(event, musicManager, voiceChannel, track);
 		    }
@@ -147,8 +154,11 @@ public class MusicCommandsListener extends ListenerAdapter {
 		    	if (firstTrack == null) {
 		    		firstTrack = playlist.getTracks().get(0);
 		    	}
-
-		    	event.reply("Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")").queue();
+		    	EmbedBuilder playlistLoadedEmbed = new EmbedBuilder();
+		    	playlistLoadedEmbed.setTitle("Playlist loaded: ");
+		    	playlistLoadedEmbed.setDescription(playlist.getName());
+		    	playlistLoadedEmbed.addField("First track of playlist: ", firstTrack.getInfo().title, false);
+		    	event.replyEmbeds(playlistLoadedEmbed.build()).queue();
 
 		    	play(event, musicManager, voiceChannel, firstTrack);
 		    }
@@ -199,30 +209,43 @@ public class MusicCommandsListener extends ListenerAdapter {
 		if (!audioManager.isConnected()) {
 			audioManager.openAudioConnection(voiceChannel);
 		} else {
-			event.reply("I am already in another voice channel!");
+			event.reply("I am already in another voice channel!").queue();
 		}
 	}
 
 	private void buildNowPlaying(final SlashCommandInteractionEvent event, final GuildMusicManager musicManager) {
-		EmbedBuilder embedNowPlaying = new EmbedBuilder();
-		long positionMillis = musicManager.player.getPlayingTrack().getPosition();
-		long durationMillis = musicManager.player.getPlayingTrack().getDuration();
-		String position = String.format("%02d:%02d:%02d", 
-				TimeUnit.MILLISECONDS.toHours(positionMillis),
-				TimeUnit.MILLISECONDS.toMinutes(positionMillis) -  
-				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(positionMillis)), // The change is in this line
-				TimeUnit.MILLISECONDS.toSeconds(positionMillis) - 
-				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionMillis)));
-		String duration = String.format("%02d:%02d:%02d", 
-				TimeUnit.MILLISECONDS.toHours(durationMillis),
-				TimeUnit.MILLISECONDS.toMinutes(durationMillis) -  
-				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(durationMillis)), // The change is in this line
-				TimeUnit.MILLISECONDS.toSeconds(durationMillis) - 
-				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationMillis)));
-		embedNowPlaying.setTitle("Currently Playing: ");
-		embedNowPlaying.setDescription("*" +musicManager.player.getPlayingTrack().getInfo().title +"*\nTimestamp: " +position +" / " +duration);
-		embedNowPlaying.setThumbnail("https://img.youtube.com/vi/" + musicManager.player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg");
-		event.replyEmbeds(embedNowPlaying.build()).queue();
+		if (musicManager != null) {
+			if (musicManager.player.getPlayingTrack() != null) {
+				EmbedBuilder embedNowPlaying = new EmbedBuilder();
+				long positionMillis = musicManager.player.getPlayingTrack().getPosition();
+				long durationMillis = musicManager.player.getPlayingTrack().getDuration();
+				String position = String.format("%02d:%02d:%02d", 
+						TimeUnit.MILLISECONDS.toHours(positionMillis),
+						TimeUnit.MILLISECONDS.toMinutes(positionMillis) -  
+						TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(positionMillis)), // The change is in this line
+						TimeUnit.MILLISECONDS.toSeconds(positionMillis) - 
+						TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(positionMillis)));
+				String duration = String.format("%02d:%02d:%02d", 
+						TimeUnit.MILLISECONDS.toHours(durationMillis),
+						TimeUnit.MILLISECONDS.toMinutes(durationMillis) -  
+						TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(durationMillis)), // The change is in this line
+						TimeUnit.MILLISECONDS.toSeconds(durationMillis) - 
+						TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationMillis)));
+				embedNowPlaying.setTitle("Currently Playing: ");
+				embedNowPlaying.setDescription("*" +musicManager.player.getPlayingTrack().getInfo().title +"*\n\nTimestamp: " +position +" / " +duration);
+				embedNowPlaying.setThumbnail("https://img.youtube.com/vi/" + musicManager.player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg");
+				event.replyEmbeds(embedNowPlaying.build()).addActionRow(
+						Button.primary("playpause", Emoji.fromUnicode("⏯️")),
+						Button.primary("skip", Emoji.fromUnicode("⏭️")),
+						Button.primary("stop", Emoji.fromUnicode("⏹️"))
+						)
+				.queue();
+			} else {
+				event.reply("No tracks are queued.").queue();
+			}
+		} else {
+			event.reply("No tracks are queued.").queue();
+		}
 	}
 
 	private void buildQueue(final SlashCommandInteractionEvent event, final GuildMusicManager musicManager) {
@@ -239,12 +262,49 @@ public class MusicCommandsListener extends ListenerAdapter {
 					trackQueueString.concat(idx +" | " +track.getInfo().title +"\n");
 				}
 				embedQueue.addField("Tracks: ", trackQueueString, false);
-				event.replyEmbeds(embedQueue.build()).queue();
+				event.replyEmbeds(embedQueue.build())
+				.addActionRow(
+						Button.primary("playpause", Emoji.fromUnicode("⏯️")),
+						Button.primary("skip", Emoji.fromUnicode("⏭️")),
+						Button.primary("stop", Emoji.fromUnicode("⏹️"))
+						)
+				.queue();
 			} else {
 				event.reply("No tracks are queued.").queue();
 			}
 		} else {
 			event.reply("No tracks are queued.").queue();
+		}
+	}
+
+	@Override
+	public void onButtonInteraction(ButtonInteractionEvent event) {
+		GuildMusicManager musicManager = musicManagers.get(Long.parseLong(event.getGuild().getId()));
+		switch (event.getComponentId()) {
+		case "playpause":
+			if (musicManager.player.isPaused() == true) {
+				musicManager.player.setPaused(false);
+				event.reply("Music is Resumed.").queue();
+			} else {
+				musicManager.player.setPaused(true);
+				event.reply("Music is Paused.").queue();
+			}
+			break;
+		case "skip":
+			event.reply("Skipping track: " +musicManager.player.getPlayingTrack().getInfo().title).queue();
+			musicManager.scheduler.nextTrack();
+			if (musicManager.player.getPlayingTrack() == null) {
+				event.reply("That was the last track! Leaving voice channel...").queue();
+				musicManager.player.checkCleanup(0);
+				event.getGuild().getAudioManager().closeAudioConnection();
+			}
+			break;
+		case "stop":
+			musicManager.player.stopTrack();
+			musicManager.player.checkCleanup(0);
+			event.getGuild().getAudioManager().closeAudioConnection();
+			event.reply("Music is Stopped.").queue();
+			break;
 		}
 	}
 }

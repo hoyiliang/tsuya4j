@@ -3,6 +3,7 @@ package ind.yl.tsuya.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ind.yl.tsuya.misc.MiscCommandsListener;
 import ind.yl.tsuya.music.MusicCommandsListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -32,6 +33,7 @@ public class Main {
 	public static void initEventListeners(final JDA bot) {
 		bot.addEventListener(new BaseCommandsListener(bot));
 		bot.addEventListener(new MusicCommandsListener());
+		bot.addEventListener(new MiscCommandsListener());
 	}
 
 	public static void initCommands(final JDA bot) {
@@ -60,7 +62,11 @@ public class Main {
 			Commands.slash("queue", "Get track queue.")
 				.setGuildOnly(true),
 			Commands.slash("nowplaying", "Get info for currently playing track.")
-				.setGuildOnly(true)
+				.setGuildOnly(true),
+			
+			//// Misc Section ///////////////////////////////////////////////////
+			Commands.slash("avatar", "Get your own avatar!")
+				.addOption(OptionType.MENTIONABLE, "mention", "@mention someone and get their avatar!", false)
 		).queue();
 
 		LOGGER.info("EXITING: initCommands()");
